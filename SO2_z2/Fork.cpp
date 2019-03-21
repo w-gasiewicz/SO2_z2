@@ -1,8 +1,7 @@
 #include "Fork.h"
 #include <vector>
 #include <mutex>
-
-    mutex mx;
+    mutex _mx;
 Fork::Fork() {
 }
 
@@ -11,14 +10,14 @@ Fork::Fork(int forkID,bool forkIsUsed) {
     isUsed=forkIsUsed;
 }
 void Fork::Release() {
-    mx.lock();
+    _mx.lock();
     isUsed=false;
-    mx.unlock();
+    _mx.unlock();
 }
 void Fork::Take(){
-    mx.lock();
+    _mx.lock();
     isUsed=true;
-    mx.unlock();
+    _mx.unlock();
 }
 Fork::~Fork() {
 }

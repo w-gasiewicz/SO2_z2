@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>Fork.h</itemPath>
       <itemPath>Philosopher.h</itemPath>
+      <itemPath>Visualization.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -16,6 +17,7 @@
                    projectFiles="true">
       <itemPath>Fork.cpp</itemPath>
       <itemPath>Philosopher.cpp</itemPath>
+      <itemPath>Visualization.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -42,7 +44,7 @@
         <ccTool>
           <standard>8</standard>
           <commandlineTool>g++</commandlineTool>
-          <commandLine>-pthread</commandLine>
+          <commandLine>-pthread -lncurses</commandLine>
         </ccTool>
       </compileType>
       <item path="Fork.cpp" ex="false" tool="1" flavor2="0">
@@ -52,6 +54,10 @@
       <item path="Philosopher.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Philosopher.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Visualization.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Visualization.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -83,6 +89,10 @@
       <item path="Philosopher.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Philosopher.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Visualization.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Visualization.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

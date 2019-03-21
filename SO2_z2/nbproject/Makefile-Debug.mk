@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/Fork.o \
 	${OBJECTDIR}/Philosopher.o \
+	${OBJECTDIR}/Visualization.o \
 	${OBJECTDIR}/main.o
 
 
@@ -44,8 +45,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-pthread
-CXXFLAGS=-pthread
+CCFLAGS=-pthread -lncurses
+CXXFLAGS=-pthread -lncurses
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -73,6 +74,11 @@ ${OBJECTDIR}/Philosopher.o: Philosopher.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Philosopher.o Philosopher.cpp
+
+${OBJECTDIR}/Visualization.o: Visualization.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Visualization.o Visualization.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}

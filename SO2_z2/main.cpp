@@ -1,78 +1,77 @@
 #include <iostream>
 #include <thread>
 #include <random>
-#include <mutex>
 #include "Philosopher.h"
 #include "Fork.h"
+#include "Visualization.h"
+#include <mutex>
 using namespace std;
 
 static const int numOfPhilosophers=5;
-//mutex mu;
 thread t[numOfPhilosophers];
 Philosopher philosophersTab[numOfPhilosophers];
 Fork forks[numOfPhilosophers];
-
-int leftForkID,rightForkID;
-    
-//int GenerateRandomPhilosopher()
-//{//function generates random philosopher number    
-//    int value=rand() % 5+0;
-//    return value;
-//}
+bool running=true;
+mutex mut;
 void Run(Philosopher *p,int index)
 {
-    //mu.lock();
-            if(index==numOfPhilosophers-1)
-                leftForkID=0;
-            else
-                leftForkID=index+1;
-            rightForkID=index;
-    //mu.unlock();    
-            if(philosophersTab[p->id].isHungry && !forks[leftForkID].isUsed && !forks[rightForkID].isUsed)
-            {
-                forks[leftForkID].Take();
-                forks[rightForkID].Take();
-                             
+    while(running)
+    {
+            if(philosophersTab[p->id].isHungry && !forks[p->leftForkID].isUsed /*&& !forks[rightForkID].isUsed*/)
+            {//take up left fork
+                forks[p->leftForkID].Take();
+                p->leftForkReady=true;
+            }
+            if(philosophersTab[p->id].isHungry && !forks[p->rightForkID].isUsed)
+            {//take up right fork
+                forks[p->rightForkID].Take();
+                p->rightForkReady=true;   
+            }
+            if(philosophersTab[p->id].leftForkReady && philosophersTab[p->id].rightForkReady)
+            {//if philosopher have two fork he can eat
+                
                 p->Eating(&philosophersTab[p->id]);
                 philosophersTab[p->id].isHungry=false;
-                
-                forks[leftForkID].Release();
-                forks[rightForkID].Release();
+                                
+                forks[p->leftForkID].Release();
+                p->leftForkReady=false;
+                forks[p->rightForkID].Release();
+                p->rightForkReady=false;
             }
-            else if(!philosophersTab[p->id].isHungry)
+            if(!philosophersTab[p->id].isHungry && !philosophersTab[p->id].leftForkReady && !philosophersTab[p->id].rightForkReady)
             {
                 p->Philosophizing(&philosophersTab[p->id]);
                 philosophersTab[p->id].isHungry=true;
            }  
             else
-                cout<<"Philospher number: "<<index<<" can't eat becouse of leak of forks."<<endl;
-    
+                p->canEat=false;//philosopher cant eat becouse of leak of forks
+    }
 }
 void CreatePhilosophersAndForks()
 {//function create philosophers objects
      for(int i=0;i<numOfPhilosophers;i++)
     {
-        philosophersTab[i] =  Philosopher(i,true);//create new philosopher passing id,isPhilosophizing,isEating,isHungry,
+        philosophersTab[i] =  Philosopher(i,false);//create new philosopher passing id,isPhilosophizing,isEating,isHungry,
         forks[i]=Fork(i,false);//create forks passing id and status(false=is possible to use)
      }
 }
 int main(int argc, char** argv) 
 {       
     CreatePhilosophersAndForks();
-    cout<<"Philosophers and forks created."<<endl;
-  
     for(int i=0;i<numOfPhilosophers;i++)
     {
         t[i]=thread(Run,&philosophersTab[i],i);
     }
     
-    while(true)
+    Visualization vs = Visualization();
+    vs.Start(forks,philosophersTab);
+    
+    running=false;
+    
+    for(int i=0;i<numOfPhilosophers;i++)
     {
-//        int index=GenerateRandomPhilosopher();//get random philospher        
-//        t[index]=thread(Run,&philosophersTab[index],index);
-//        t[index].join();        
-        int x=cin.get();
-        cout<<x<<endl;
+        t[i].join();
     }
+    
     return 0;
 }
