@@ -1,9 +1,8 @@
-#include "Philosopher.h"
+ #include "Philosopher.h"
 #include <iostream>
 #include <random>
 #include <thread>
 default_random_engine re;
-
 Philosopher::Philosopher()
 {
 
@@ -53,6 +52,15 @@ int Philosopher :: GetEatingTime()
 int Philosopher :: GetPhiloTime()
 {
     return this-> philoTime;
+}
+void Philosopher :: StartTimer()
+{
+        start = chrono::high_resolution_clock::now();
+}
+void Philosopher :: StopTimer()
+{    
+	stop = chrono::high_resolution_clock::now();
+        timeFromLastMeal = chrono::duration_cast<chrono::milliseconds>(stop - start).count();
 }
 int Philosopher :: GetTimeFromLastMeal()
 {

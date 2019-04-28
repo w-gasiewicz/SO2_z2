@@ -3,32 +3,34 @@
 #include <iostream>
 #include <mutex>
 
-mutex control;
-
-Visualization::Visualization() {
+Visualization::Visualization() 
+{
     initscr();
     noecho();
     resizeterm(256,70);
     curs_set(0);
     
 }
-void Visualization::CreateColors() {
+void Visualization::CreateColors() 
+{
     start_color();
 
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
-    init_pair(3, COLOR_RED, COLOR_BLACK);    
-    init_pair(6, COLOR_CYAN, COLOR_BLACK);
+    init_pair(3, COLOR_RED, COLOR_BLACK);   
+    init_pair(4, COLOR_CYAN, COLOR_BLACK);   
+    init_pair(5, COLOR_YELLOW, COLOR_BLACK);   
+    init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
 
     bkgd(COLOR_PAIR(1));
 }
-void Visualization::Legend() {
-
+void Visualization::Legend() 
+{
     attron(COLOR_PAIR(6));
     move(0,1);
     printw("Legend: ");
     move(1,1);
-    printw("Press ESC button -> enter to stop");
+    printw("Press 'q' button: to stop");
     attron(COLOR_PAIR(4));
 
     attron(COLOR_PAIR(3));
@@ -76,6 +78,7 @@ void Visualization::Legend() {
     move(9,1);
     printw(" 3 3 2 2 1 1 0 0 4 4");
     
+    attron(COLOR_PAIR(4));
     //draw philosophers:
     move(1,35);
     printw("Philosopher 0: ");    
@@ -88,7 +91,7 @@ void Visualization::Legend() {
     move(17,35);
     printw("Philosopher 4: ");
     
-    attron(COLOR_PAIR(2));
+    attron(COLOR_PAIR(1));
     for(int i=2;i<20;i+=2)
     {
         move(i,35);
@@ -97,15 +100,15 @@ void Visualization::Legend() {
         move(i,35);
         printw("Eating time: ");
         i++;
-        move(i,35);
+        move(i,36);
         printw("Time from last meal: ");
     }
     attron(COLOR_PAIR(6));
     move(21,35);
     printw("End visualisation.");
 }
-void Visualization :: ChangeForkStatus(Philosopher *p){
-    
+void Visualization :: ChangeForkStatus(Philosopher *p)
+{    
     if(p->id==0)
     {
         move(1,50);
@@ -133,7 +136,7 @@ void Visualization :: ChangeForkStatus(Philosopher *p){
     }
 }
 void Visualization :: DrawPhilo(Philosopher *p)
-{
+{//actualise philosophers fork status and times
     if(!p->leftForkReady)
         attron(COLOR_PAIR(3));
     else
@@ -148,38 +151,32 @@ void Visualization :: DrawPhilo(Philosopher *p)
     addch('/');
     
     int counter=2;    
-    attron(COLOR_PAIR(2));
+    attron(COLOR_PAIR(5));
     for(int i=0;i<5;i++)
     {
         if(p->id==i && p->leftForkReady && p->rightForkReady)
         {       
-            //counter++;
-            //move(counter,48);
-            //clrtoeol();
-           // counter--;
             move(counter,54);
-            printw("%d[ms]",p->GetPhiloTime());        
+            printw("%d[ms] ",p->GetPhiloTime());        
         }
         else if(!p->leftForkReady && !p->rightForkReady && p->id==i)
         {
-            //move(counter,54);
-            //clrtoeol();
             counter++;
             move(counter,48);
-            printw("%d[ms]",p->GetEatingTime());
+            printw("%d[ms] ",p->GetEatingTime());
             counter--;
         }
         if(p->id==i)
         {
             counter+=2;
             move(counter,56);
-            printw("%d[ms]",p->GetTimeFromLastMeal());
+            printw("%d[ms] ",p->GetTimeFromLastMeal());
             counter-=2;
         }
         counter+=4;
     }   
 }
-void Visualization :: Start(Fork forks[], Philosopher philosophers[]){
+void Visualization :: Start(Philosopher philosophers[]){
     int inputChar;
     nodelay(stdscr,true);
     CreateColors();
@@ -187,16 +184,14 @@ void Visualization :: Start(Fork forks[], Philosopher philosophers[]){
     while(true)
     {
         inputChar=getch();
-        if(inputChar!=27)//while user dont press esc button
+        if(inputChar!=113)//while user dont press q button
         {}
         else
             return;
         
         for(int i=0;i<5;i++)
         {
-            //control.lock();
             ChangeForkStatus(&philosophers[i]);
-            //control.unlock();
         }
     }
 }

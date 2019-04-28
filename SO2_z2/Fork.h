@@ -12,8 +12,6 @@ public:
     virtual ~Fork();
     int id;
     bool isUsed;
-private:
-    //mutex _mx;
 };
 
 #endif /* FORK_H */

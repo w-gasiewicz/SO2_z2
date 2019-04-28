@@ -6,7 +6,7 @@
 class Visualization {
 public:
     Visualization();
-    void Start(Fork forks[],Philosopher philosophers[]);
+    void Start(Philosopher philosophers[]);
     virtual ~Visualization();
 private:
     void CreateColors();

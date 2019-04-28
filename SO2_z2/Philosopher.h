@@ -5,6 +5,7 @@
 #include <iostream>
 #include <random>
 #include <thread>
+#include <chrono>
 using namespace std;
 
 class Philosopher {
@@ -14,7 +15,6 @@ public:
     bool isHungry;
     bool isThinking;
     bool leftForkReady, rightForkReady;
-    bool canEat;
     int leftForkID,rightForkID;
     int eatingTime,philoTime,timeFromLastMeal;
     Philosopher(int pID, bool pIsHungry);
@@ -22,10 +22,13 @@ public:
     void Eating(Philosopher *p); 
     int GetEatingTime();
     int GetPhiloTime();
+    void StartTimer();
+    void StopTimer();
     int GetTimeFromLastMeal();
     virtual ~Philosopher();
 private:    
     double GenerateRandomTime();
+    chrono::high_resolution_clock::time_point start , stop;
 };
 
 #endif /* PHILOSOPHER_H */
